@@ -3,6 +3,7 @@ helper file for switching logic when switch command is called
 """
 import sys
 import os
+import subprocess
 
 def brancher():
     """
@@ -35,9 +36,23 @@ def writer(path, ver):
         bool: True if successful, False otherwise
     """
     pymanDir = os.environ['PWD'] + "/.pyman"
+
+    # first check if there's already something written
+    [pathFound, aliasFound] = [False, False]
+    shellConfig = []
+    with open(path) as f:
+        shellConfig = f.readlines()
+    for line in shellConfig:
+        if line == f"""export PATH="$PATH:/home/warrenwu/acc/cli-tool/.pyman"\n""":
+            pathFound = True
+        elif line == f"""alias pie="pyman{ver}"\n""":
+            aliasFound = True
+
     with open(path, "a") as f:
-        f.write(f"""\n\nexport PATH="$PATH:{pymanDir}"\n""")
-        f.write(f"""alias pie="pyman{ver}"\n""")
+        if (not pathFound):
+            f.write(f"""\nexport PATH="$PATH:{pymanDir}"\n""")
+        if (not aliasFound):
+            f.write(f"""alias pie="pyman{ver}"\n""")
     return True
 
 def source(path):
