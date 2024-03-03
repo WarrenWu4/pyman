@@ -4,6 +4,7 @@ helper file for switching logic when switch command is called
 import sys
 import os
 import subprocess
+import shutil
 
 def brancher():
     """
@@ -24,36 +25,28 @@ def brancher():
         return None
     return shellPath
 
-def writer(path, ver):
+def writer(path):
     """
     writes the commands to switch python versions in dotfiles/profile
 
     Args:
         path (str): path to dotfile/profile
-        ver (str): python version to switch to
-
-    Returns:
-        bool: True if successful, False otherwise
     """
-    pymanDir = os.environ['PWD'] + "/.pyman"
+    pymanDir = os.path.expanduser("~")+"/.pyman"
 
     # first check if there's already something written
-    [pathFound, aliasFound] = [False, False]
+    pathFound = False
     shellConfig = []
     with open(path) as f:
         shellConfig = f.readlines()
     for line in shellConfig:
-        if line == f"""export PATH="$PATH:/home/warrenwu/acc/cli-tool/.pyman"\n""":
+        if line == f"""export PATH="$PATH:{pymanDir}"\n""":
             pathFound = True
-        elif line == f"""alias pie="pyman{ver}"\n""":
-            aliasFound = True
 
     with open(path, "a") as f:
         if (not pathFound):
             f.write(f"""\nexport PATH="$PATH:{pymanDir}"\n""")
-        if (not aliasFound):
-            f.write(f"""alias pie="pyman{ver}"\n""")
-    return True
+
 
 def source(path):
     """
@@ -62,9 +55,32 @@ def source(path):
     Args:
         path (str): path to dotfile
     """
-    os.system(f"source {path}")
+    try:
+        os.system(f"source {path}")
+    except:
+        os.system(f". {path}")
 
 def switcher(ver):
-    writer(brancher(), ver)
-    source(brancher())
+    """
+    main function to switch python versions
+
+    Args:
+        ver (str): python version to switch to
+    """
+    try:
+        # copy desired version as 'pie' executable
+        dir = os.path.expanduser("~")+"/.pyman"
+        shutil.copy(f"{dir}/pyman{ver}", f"{dir}/pie")
+        
+        # add .pyman directory to path
+        try:
+            path = brancher()
+            writer(path)
+            source(path)
+        except:
+            print("Failed to add .pyman to path; manual intervention required")
+                    
+    except:
+        raise
+    
 

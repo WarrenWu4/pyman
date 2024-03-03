@@ -4,7 +4,26 @@ uninstall script to remove pyman crap from your pc
 import os
 from switcher import brancher, source
 
-def removePymanDir(path=".pyman"):
+def findPymanDir():
+    """
+    Finds the pyman directory after it's been added to path
+
+    Returns
+        path (str): path to .pyman directory
+    """
+    try:
+        print("1. Getting pyman from $PATH env var...")
+        paths = os.environ['PATH'].strip().split(":")
+        for path in paths:
+            if (".pyman" == path[-6:]):
+                return path
+        print("SUCCESS")
+    except:
+        print("ERROR")
+        exit("Exiting...")
+    
+
+def removePymanDir(path):
     """
     Removes the pyman directory created during initialization
 
@@ -49,5 +68,6 @@ def removeConfigChanges():
     source(path)
 
 def uninstall():
-    removePymanDir()
-    removeConfigChanges()
+    print(findPymanDir())
+    # removePymanDir(findPymanDir())
+    # removeConfigChanges()
