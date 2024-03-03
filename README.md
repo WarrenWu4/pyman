@@ -1,63 +1,64 @@
-installation process --> initialize pygame and create necessary files/folders
-
-from there can freely, list, switch, or reset pyman
-
-uninstall process --> remove files and folders, reset alias
-
-add pretty warnings and styling and stuff
-
 # pyman
 
-a simple python version manager
+## 🤔 About
 
-## processes
+A simple python version manager created for the Aggie Coding Club CLI tool workshop.
 
-**installation process**
+## 📦 Setup
 
-1. get $PATH env paths
+Create a virtual environment and activate it
 
-2. parse $PATH env paths and store in dictionary as {ver: path}
+```bash
+python -m venv venv
 
-3. recursively search default file paths in each os system and store python files found in dictionary as {ver: path}
+source venv/bin/activate
+```
 
-4. create a dir ~/.pyman and copy the python files after parsing to the dir
+Install required libraries
 
-5. add pyman to path and set alias
+```bash
+pip install -r requirements.txt
+```
 
-**list process**
+## 🎈 Usage
 
-1. search for ~/.pyman and list python versions in the dir
+**3 commands**
 
-2. add msg to inform user to refresh if version not found
+1. list: lists different pytrhon versions found
 
-**switch process**
+```bash
+python pyman.py list
+```
 
-1. if a version is supplied, switch pyman alias in dotfiles
+2. switch [--version (optional)]: switches to different python version available in .pyman dir
 
-2. if a version isn't supplied, create multiple-choice prompt for user to choose a version
+```bash
+python pyman.py switch --version x.xx.x
+```
 
-**refresh proceess**
+3. clean: removes all changes pyman created (removes directory created & configurations added in shell profiles)
 
-1. reinitializes pyman (basically reinstalls it)
+```bash
+python pyman.py clean
+```
 
-**uninstall process**
+## ⚙️ Technologies
 
-1. delete alias and ~/.pyman folder
+**Language:** Python
 
-## usage
+**Libraries:** Typer, Rich, Inquirer
 
-**5 commands**
+## 💬 Contact
 
-1. install: initializes pyman and creates necessary/edits files
+**Email:** warrenweiwu04@gmail.com
 
-    1.
+**Discord:** @warrenwu
 
-2. list: list different python versions from .pyman dir
+**Twitter:** @warrenwu04
 
-3. switch [ver (optional)]: switches to different python version available in .pyman dir
+**Other:**
+[LinkedIn](https://www.linkedin.com/in/warren-wu4/) | [GitHub](https://github.com/WarrenWu4) | [Portfolio](https://www.warrenwu.dev/) | [YouTube](https://www.youtube.com/@Warren_Wu)
 
-4. refresh [paths (optional)]: reinitializes pyman when new python version is installed
+---
 
-5. uninstall: removes all changes pyman created
-
-_need to first install pyman before using it_
+✌️ Peace Out.
