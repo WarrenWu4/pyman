@@ -62,9 +62,8 @@ def switch(version: Annotated[Optional[str], "version to switch to"] = None):
 @app.command()
 def clean():
     try:
-        print("\n------------------------------")
-        print("Uninstalling pyman...")
         uninstall()
+        console.print(Text.assemble((f"Successfully removed pyman\n", "bold red")))
     except Exception as e:
         print("Error ocurred while cleaning:", e)
         exit("Exiting....")

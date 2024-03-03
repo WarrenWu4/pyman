@@ -3,71 +3,55 @@ uninstall script to remove pyman crap from your pc
 """
 import os
 from switcher import brancher, source
-
-def findPymanDir():
-    """
-    Finds the pyman directory after it's been added to path
-
-    Returns
-        path (str): path to .pyman directory
-    """
-    try:
-        print("1. Getting pyman from $PATH env var...")
-        paths = os.environ['PATH'].strip().split(":")
-        for path in paths:
-            if (".pyman" == path[-6:]):
-                return path
-        print("SUCCESS")
-    except:
-        print("ERROR")
-        exit("Exiting...")
-    
+from rich.progress import track
 
 def removePymanDir(path):
     """
     Removes the pyman directory created during initialization
 
     Args
-        path (str): defaults to the current working directory, but user can pass in the direct path
+        path (str): installation path for .pyman
     """
     if (os.path.isdir(path)):
-        print("Valid pyman directory found...")
-        print("Deleting pyman files")
         files = os.listdir(path)
-        for file in files:
-            print(f"\tDeleting {file}")
-            os.remove(file)
-        print("Deleting .pyman folder")
+        for file in track(files):
+            os.remove(f"{path}/{file}")
         os.rmdir(path)
     else:
         print("Pyman directory not found...")
         exit("Exiting...")
 
-def removeConfigChanges():
+def removeConfigChanges(path):
     """
     Deletes lines written in config files
+    
+    Args
+        path (str): installation path for .pyman
     """
-    path = brancher()
-    if (path == None):
-        print("Profile path not found...")
-        return
+    shellPath = brancher()
 
     # first check if there's already something written
     shellConfig = []
-    with open(path) as f:
+    with open(shellPath) as f:
         shellConfig = f.readlines()
     # then fucking eat shit
-    with open(path, "w") as f:
+    with open(shellPath, "w") as f:
         for line in shellConfig:
-            if line == f"""export PATH="$PATH:/home/warrenwu/acc/cli-tool/.pyman"\n""":
-                continue
-            if "alias pie=\"pyman" == line[:16]:
+            if line == f"""export PATH="$PATH:{path}"\n""":
                 continue
             f.write(line)
 
-    source(path)
+    source(shellPath)
 
 def uninstall():
-    print(findPymanDir())
-    # removePymanDir(findPymanDir())
-    # removeConfigChanges()
+    try:
+        dir = os.path.expanduser("~")+"/.pyman"
+        removePymanDir(dir)
+        
+        try:
+            removeConfigChanges(dir)
+        except:
+            print("Failed to remove .pyman from path; manual intervention required")
+            
+    except:
+        raise
