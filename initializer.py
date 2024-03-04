@@ -30,14 +30,17 @@ def getPythonPaths():
                 pyPaths.append(f"{path}/{file}")
 
     # recursively searches common python installation paths
-    user = os.environ['USER']
+    try:
+        user = os.environ['USER']
+    except:
+        user = os.environ['USERNAME']
     installPaths = [f"C:\\Users\\"+user+"\\AppData\\Local\\Programs\\Python"]
     def recursiveSearch(path):
         files = os.listdir(path) if (os.path.isdir(path)) else []
         for file in files:
             if (os.path.isdir(f"{path}/{file}")):
                 recursiveSearch(f"{path}/{file}")
-            if (re.search("^python(\d*\.*)+(exe)?$", file)):
+            elif (re.search("^python(\d*\.*)+(exe)?$", file)):
                 pyPaths.append(f"{path}/{file}")
 
     for installPath in installPaths:
@@ -58,10 +61,14 @@ def getPythonVersions(pythonPaths):
         dict {str: str}: dictionary with key being the version and value being the path
     """
     data = {}
+    print(pythonPaths)
     for pythonPath in pythonPaths:
-        version = subprocess.check_output(f"{pythonPath} -V", shell=True, text=True)
-        version = version.strip().split()[-1]
-        data[version] = pythonPath
+        try:
+            version = subprocess.check_output(f"{pythonPath} -V", shell=True, text=True)
+            version = version.strip().split()[-1]
+            data[version] = pythonPath
+        except:
+            continue
     return data
 
 def createCopies(pythonPaths):
