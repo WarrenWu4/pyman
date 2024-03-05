@@ -61,7 +61,6 @@ def getPythonVersions(pythonPaths):
         dict {str: str}: dictionary with key being the version and value being the path
     """
     data = {}
-    print(pythonPaths)
     for pythonPath in pythonPaths:
         try:
             version = subprocess.check_output(f"{pythonPath} -V", shell=True, text=True)
